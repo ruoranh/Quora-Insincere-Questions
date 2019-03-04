@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Home</title>
+
+</head>
+<body>
+
+	<header>
+		<div class="container">
+		<div id="brandname">
+		</div>
+		<h1 style = "font-family:montserrat light;font-size:40px; color:#3A3A3A"> <center>Insincere Questions Identification</center></h1>
+
+	</div>
+	</header>
+
+	<div class="ml-container">
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+		<script>
+			$(function() {
+				$('#rawtext').keyup(function(event) {
+					if (event.keyCode == '13') {
+						$('#formText').submit();
+					};
+				});
+			});
+		</script>
+		<form action="{{ url_for('predict')}}" method="POST" id="formText" name="formText">
+		<center><p style = "font-family:montserrat ;font-size:25px; color:#626262">Enter Question Here</p></center>
+
+		<center><textarea style = "font-family:lustria ;font-size:20px" name="rawtext" id="rawtext" rows="5" cols="50"></textarea></center>
+
+
+		<center><input style = "font-family:montserrat ;font-size:20px; color:#626262" type="submit" value="Submit" ></center>
+
+	</form>
+
+	</div>
+
+
+
+
+</body>
+</html>
