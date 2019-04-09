@@ -44,64 +44,88 @@ In total seven different Model were created using the below methods:
 **N Trigrams** – 40 best trigrams found  using ‘Likelihood Ratio’ and 40 best bigrams using ‘Point Mutual Information’ were found and comb
 
 
-![](README%Images/Basic_score.png)
-
-
-
-
- 
-                                                       Basic Naïve Bayes model Score
+![](README%20Images/Basic_score.png)
 
 Looking at the accuracy chart, you can see that most of the results were above baseline accuracy and all other models achieved higher accuracy than Raw Token. Simply looking at accuracy scores, it would appear that the models are achieving reasonable results.  However, the F1 scores tells a very different story, every model produced a lower F1 than Raw Token. The most extreme of which is the TFIDF model, looking at the confusion matrix below shows us why.
+
+![](README%20Images/TFIDF_confusion.png)
+
 The TFIDF model predicted almost everything as sincere, but it was still able to achieve above baseline accuracy due to the small amount of insincere questions it got right. However, the F1 score was able to capture the fact it got almost all of the insincere questions wrong, correctly giving it a very low F1 score of 0.15. This confirm that F1 score is a better measure of performance for this scenario.
+
 Random Forest was trialled but resulted in much longer computation time without boost in accuracy.
 
-03. Lemmatization.
+
+## 03. Lemmatization ##
+
 In this step, I lemmatized the data with Part of Speech tagging, by using the spaCy library. Then performed all the same modelling as previous step, still comparing against Raw Token model.
 
-  
+![](README%20Images/Lemmatized_score.png)  
 Lemmatized Naïve Bayes model Score
+
 Results showed a similar pattern to the un-lemmatized data. However, there was a slight increase in F1 score of All Bigram and All Trigram models, but a slight decreased F1 score for other models. This is because, while lemmatization removed some of the noise in the data, it also removed some of the signal. This resulted in a slight boost to the performance of noisier models like All Bi/Trigram, but reduced the performance of models which had built in feature selection like TFIDF and Best Bi/Trigrams. However, Raw Token model still has the best F1 score.
 
-04. Identify Label
+
+## 04. Identify Label ##
 Having tried the standard bag of words techniques I decided to try increasing model performance through feature engineering. As discussed earlier, there was a clear pattern of identity words associated with insincere questions, by replacing common identity words with a single label, the model will consider all these words to have the same meaning, which should increase model performance. As such, I replaced all religious, racial and nationality words with their own respective group label, then re-trained all the models, except Raw Token.
- 
+
+![](README%20Images/Labelled_score.png)
 Identity Label replaced Naïve Bayes model Score
+
 The new feature increased F1 score on all models except All Trigram and TFIDF. The biggest gain was in All Bigram which increased by almost 0.1. Unfortunately, Raw Token still has the highest F1 score.
 
-0.5 Long Short Term Memory
+
+## 0.5 Long Short Term Memory ##
 With limited success using bag of words methods, Long Short Term Memory (LSTM) was the logical next step. The embedding process can derive complex meanings for each word, based on what words they often appear next to in the corpus and store these meaning in a multiple dimensional vector. Therefore, the meaning assigned to each word is less binary compared to bag of words techniques, allowing for more complex interpretation of semantics. Futhermore, LSTM has the ability to assign weights to each word beyond the word meaning from the embedding process. Through an iterative backpropagation process, LSTM is able to feature select, by reducing the weight on words that represent noise and increase weights on words that contain lots of signal.
-1D convolutional Layer LSTM
+
+### 1D convolutional Layer LSTM ###
 Initial run of LSTM model showed promising result, however the model took over 6 hours to train. To reduce training time, I employed a single 1D convolutional layer as a feature reduction technique. This reduced the training time to around 2-3 hours, I was able to train a number of these models by varying the following parameters.
+
+![](README%20Images/Conv_LSTM_parameters.png)
 1D Convolutional Layer LSTM model tunning parameters
+
+![](README%20Images/Conv_LSTM_score.png)
 1D Convolutional Layer LSTM model Results
+
 The best results were achieved using large embedding vocabulary, high embedding dimension and low drop rate. Again none of the models were able to out perform Raw Token Naïve Bayes model.  
 
-LSTM only
+### LSTM only ###
 It looks like the convolutional layer is remove too much signal from the data. Back to training a straight LSTM model. Due to the large computation time of these models I was not able to explore the tunning parameters, only had time to train 3 models plus a model using a google pre-trained Word2Vec embedding.
 
 
-
+![](README%20Images/LSTM_score.png)
  LSTM model Results
+ 
 Finally, these models achieve results better than Raw Token Naïve Bayes. However, if we look at the confusion matrix below, the model is still mislabelling 44% of insincere questions. This isn’t a good outcome.
+
+![](README%20Images/LSTM_confusion.png)
 Best LSTM model Confusion Matrix
 
-Focus on the objective
+
+## Focus on the objective ##
+
 At this point I asked myself, what is the objective of this model. Isn’t to capture as many in insincere questions as possible, so user of the Quora site will not be exposed to such content? Or is it to minimise the number of questions being captured by the model so as to minimise the amount of content Quora admins needs to review. I decided for the purpose of this project I will prioritise the capture of insincere questions at the expense of having extra false positives.
+
 As all models produce a probability rather than a yes or no answer, we are able to change the rounding threshold to change what the model prioritise, by default the rounding threshold is set at 0.5.
 
+![](README%20Images/Threshold_chart.png)
 Capture percentage vs rounding threshold (Best LSTM)
+
 The above chart shows that as the threshold decrease, the percentage of insincere questions being correctly labelled increases, however the percentage of sincere questions being incorrectly labelled also increase. The advantage is that the increase in the correctly label insincere questions is much higher than the wrongly labelled sincere questions at below 0.1 threshold.
+
+![](README%20Images/Threshold_table.png)
 Best LSTM threshold vs prediction, Positive = Insincere.
+
 The final model I chose had a threshold of 0.1, this was able to capture 86% of insincere questions, and wrongly labelled 8% of sincere questions as insincere. A much better result than the default LSTM model.
 
-Web App
+
+## Web App ##
 Lastly, I created a simple web app that allowed users to ask the model questions and the model will predict whether the question was sincere or not. It produced some interesting results
 
+![](README%20Images/Web_app.png)
 
 
-
-Summary
+## Summary ##
 This project has opened by eyes to the fascinating world of NLP and allowed me to experience both the amazing abilities and the many limitations of the current NLP field. 
+
 My model is able to reduce the amount of questions requiring manual review by 87%, when compared to if no model is used, making the insincere question problem manageable. Given more time, I am confident I could increase the result beyond what I was able to achieve so far. Next steps include combining feature engineering with LSTM models and explore more embedding methods such as Word2Vec and FastText.
 
