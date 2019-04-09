@@ -45,10 +45,12 @@
 
     <center><h2 style = "font-family:montserrat ;font-size:20px; color:#626262">Result</h2></center>
 
-    {% if prediction < 0.5 %}
+    {% if prediction < 0.3 %}
     <center><h2 style="font-family:montserrat light; color:green;">Sincere</h2></center>
     {% else %}
     <center><h2 style="font-family:montserrat light; color:red;">Insincere</h2></center>
     {% endif %}
-  </body>
+    <center><h2 style = "font-family:montserrat ;font-size:20px; color:#626262">Probability</h2></center>
+    <center><h2 style = "font-family:montserrat light;font-size:20px; color:#626262">{{ prediction }}</h2></center>
+    </body>
 </html>
