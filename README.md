@@ -44,7 +44,7 @@ In total seven different Model were created using the below methods:
 **N Trigrams** – 40 best trigrams found  using ‘Likelihood Ratio’ and 40 best bigrams using ‘Point Mutual Information’ were found and comb
 
 
-
+![](README%Images/Basic_score.png)
 
 
 
