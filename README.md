@@ -21,7 +21,7 @@ Trying to get a sense of the dataset, looking for any patterns that may help wit
 
 The most interesting discovery was the difference in common words/bigrams between classifications. After removing common stop words. Sincere questions contained mostly words associated with questions, such as ‘one’, ‘best’, ‘think’, ‘work’ etc, with the exception of the word ‘India’, this is because India is one of the largest user base for Quora. Where as insincere questions contain mostly words associated with identity ‘Muslim’, ‘American’, ‘women’, ‘men’, ‘liberal’ etc, with ‘trump’ also being a top word. Bigrams showed a very similar pattern. This provide a very good indication of what type of questions are featured in the insincere set.
 
-![](README%20Images/Word%20Cloud.png)
+![](README%20Images/Word_cloud.png)
 
 ## Basic Text Modelling (Workbook 02) ##
 Bag of words vectorizer and Native Bayes. Train/Test split 75/25, stratified. Cleaning involved removed non-alpha characters, removed standard NLTK stopwords, lower case all characters.
